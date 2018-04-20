@@ -21,6 +21,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             if let textField = alertController.textFields?.first {
                 self.todoList.insert(textField.text!, at: 0)
                 self.tableView.insertRows(at: [IndexPath(row: 0, section:0)], with: UITableViewRowAnimation.right)
+                
+                let userDefaults = UserDefaults.standard
+                userDefaults.set(self.todoList, forKey: "todoList")
+                userDefaults.synchronize()
             }
         }
 
@@ -34,7 +38,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        let userDefaults = UserDefaults.standard
+        if let storedTodoList = userDefaults.array(forKey: "todoList") as? [String] {
+            todoList.append(contentsOf: storedTodoList)
+        }
     }
 
     override func didReceiveMemoryWarning() {
