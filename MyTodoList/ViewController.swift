@@ -90,6 +90,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         userDefaults.set(data, forKey: "todoList")
         userDefaults.synchronize()
     }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.delete {
+            todoList.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.fade)
+            
+            let data: Data = NSKeyedArchiver.archivedData(withRootObject: todoList)
+            let userDefaults = UserDefaults.standard
+            userDefaults.set(data, forKey: "todoList")
+            userDefaults.synchronize()
+        }
+    }
 }
 
 class MyTodo: NSObject, NSCoding {
