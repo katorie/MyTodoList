@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  TodoViewController.swift
 //  MyTodoList
 //
 //  Created by 加藤理絵 on 2018/04/20.
@@ -8,8 +8,8 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    var todoList = [MyTodo]()
+class TodoViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    var todoList = [TodoController]()
 
     @IBOutlet weak var tableView: UITableView!
     
@@ -19,7 +19,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
         let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) { (action: UIAlertAction) in
             if let textField = alertController.textFields?.first {
-                let myTodo = MyTodo()
+                let myTodo = TodoController()
                 myTodo.todoTitle = textField.text!
                 self.todoList.insert(myTodo, at: 0)
                 
@@ -45,7 +45,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         let userDefaults = UserDefaults.standard
         if let storedTodoList = userDefaults.object(forKey: "todoList") as? Data {
-            if let unarchiveTodoList = NSKeyedUnarchiver.unarchiveObject(with: storedTodoList) as? [MyTodo] {
+            if let unarchiveTodoList = NSKeyedUnarchiver.unarchiveObject(with: storedTodoList) as? [TodoController] {
                 todoList.append(contentsOf: unarchiveTodoList)
             }
         }
@@ -105,25 +105,5 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             userDefaults.set(data, forKey: "todoList")
             userDefaults.synchronize()
         }
-    }
-}
-
-class MyTodo: NSObject, NSCoding {
-    var todoTitle: String?
-    var todoDone: Bool = false
-    
-    // コンストラクタ？
-    override init() {
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        todoTitle = aDecoder.decodeObject(forKey: "todoTitle") as? String
-        // todoDone = aDecoder.decodeObject(forKey: "todoDone") -> Optional type 'Any?' cannot be used as a boolean; test for '!= nil' instead
-        todoDone = (aDecoder.decodeObject(forKey: "todoDone") != nil)
-    }
-    
-    func encode(with aCoder: NSCoder) {
-        aCoder.encode(todoTitle, forKey: "todoTitle")
-        aCoder.encode(todoDone, forKey: "todoDone")
     }
 }
